@@ -1,5 +1,6 @@
+
 import { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -7,8 +8,6 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import type { DiaryEntry } from '@/types/diary';
-import { useThemeColor } from '@/utils/theme';
-
 
 const STORAGE_KEY = '@diary_entries';
 
@@ -80,7 +79,7 @@ export default function SoulBookScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">My SoulBook</ThemedText>
       </ThemedView>
-
+      
       <ThemedView style={styles.inputContainer}>
         <TextInput
           style={styles.highlightInput}
@@ -157,51 +156,45 @@ const styles = StyleSheet.create({
     marginVertical: 24,
   },
   highlightInput: {
-    backgroundColor: useThemeColor({}, 'cardBackground'),
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
     borderRadius: 12,
     padding: 16,
-    fontSize: 17,
+    fontSize: 16,
     marginBottom: 12,
-    color: useThemeColor({}, 'text'),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    color: '#2C3E50',
+    backgroundColor: '#fff',
     height: 50,
   },
   contentInput: {
-    backgroundColor: useThemeColor({}, 'cardBackground'),
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
     borderRadius: 12,
     padding: 16,
-    fontSize: 17,
+    fontSize: 16,
     marginBottom: 12,
-    color: useThemeColor({}, 'text'),
+    color: '#2C3E50',
+    backgroundColor: '#fff',
     minHeight: 120,
     textAlignVertical: 'top',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
   },
   addButton: {
-    backgroundColor: useThemeColor({}, 'accent'),
+    backgroundColor: '#8B5CF6',
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
+    shadowColor: '#8B5CF6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
     elevation: 4,
   },
   addButtonDisabled: {
-    backgroundColor: useThemeColor({}, 'disabled'),
-    shadowColor: useThemeColor({}, 'disabledShadow'),
+    backgroundColor: '#B8B8B8',
+    shadowColor: '#B8B8B8',
   },
   buttonText: {
-    color: useThemeColor({}, 'buttonText'),
+    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -211,18 +204,20 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   entryCard: {
-    backgroundColor: useThemeColor({}, 'cardBackground'),
     padding: 20,
-    borderRadius: 20,
+    borderRadius: 12,
+    backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
   },
   date: {
     fontSize: 14,
-    color: useThemeColor({}, 'secondaryText'),
+    color: '#666',
     marginBottom: 12,
     fontWeight: '500',
   },
@@ -230,41 +225,37 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     lineHeight: 24,
-    color: useThemeColor({}, 'text'),
+    color: '#2C3E50',
     marginBottom: 8,
   },
   content: {
     fontSize: 16,
     lineHeight: 24,
-    color: useThemeColor({}, 'text'),
+    color: '#2C3E50',
   },
   moodContainer: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   moodLabel: {
-    fontSize: 15,
-    color: useThemeColor({light: '#8E8E93', dark: '#98989D'}, 'secondaryText'),
-    marginBottom: 12,
-    fontWeight: '500',
-    letterSpacing: -0.2,
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 8,
   },
   moodButtons: {
     flexDirection: 'row',
-    gap: 16,
+    gap: 12,
   },
   moodButton: {
-    padding: 12,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: useThemeColor({light: '#E5E5EA', dark: '#3A3A3C'}, 'border'),
-    backgroundColor: useThemeColor({light: '#F2F2F7', dark: '#1C1C1E'}, 'cardBackground'),
+    padding: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
   },
   selectedMood: {
-    backgroundColor: useThemeColor({light: '#007AFF', dark: '#0A84FF'}, 'accent'),
-    borderColor: 'transparent',
-    transform: [{ scale: 1.1 }],
+    backgroundColor: '#8B5CF6',
+    borderColor: '#8B5CF6',
   },
   moodEmoji: {
-    fontSize: 28,
+    fontSize: 24,
   },
 });
