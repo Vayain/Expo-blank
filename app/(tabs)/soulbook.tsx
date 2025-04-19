@@ -60,7 +60,7 @@ export default function SoulBookScreen() {
             <ThemedText style={styles.date}>
               {entry.date.toLocaleDateString()}
             </ThemedText>
-            <ThemedText>{entry.highlight}</ThemedText>
+            <ThemedText style={styles.entryText}>{entry.highlight}</ThemedText>
           </ThemedView>
         ))}
       </ThemedView>
@@ -81,46 +81,63 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   inputContainer: {
-    marginBottom: 20,
+    marginHorizontal: 16,
+    marginVertical: 24,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
+    borderColor: 'rgba(0,0,0,0.1)',
+    borderRadius: 12,
+    padding: 16,
     fontSize: 16,
-    marginBottom: 10,
-    color: '#000',
+    marginBottom: 12,
+    color: '#2C3E50',
     backgroundColor: '#fff',
-    minHeight: 100,
+    minHeight: 120,
+    textAlignVertical: 'top',
   },
   addButton: {
-    backgroundColor: '#4CAF50',
-    padding: 12,
-    borderRadius: 8,
+    backgroundColor: '#8B5CF6',
+    padding: 16,
+    borderRadius: 12,
     alignItems: 'center',
+    shadowColor: '#8B5CF6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   entriesContainer: {
-    gap: 12,
+    gap: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 24,
   },
   entryCard: {
-    padding: 16,
-    borderRadius: 8,
+    padding: 20,
+    borderRadius: 12,
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 8,
     elevation: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
   },
   date: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 8,
+    marginBottom: 12,
+    fontWeight: '500',
+  },
+  entryText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#2C3E50',
   },
 });
