@@ -1,6 +1,7 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -8,20 +9,56 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import type { DiaryEntry } from '@/types/diary';
 
+const STORAGE_KEY = '@diary_entries';
+
 export default function SoulBookScreen() {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
   const [newHighlight, setNewHighlight] = useState('');
+  const [newContent, setNewContent] = useState('');
 
-  const addEntry = () => {
+  useEffect(() => {
+    loadEntries();
+  }, []);
+
+  const loadEntries = async () => {
+    try {
+      const stored = await AsyncStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setEntries(parsed.map((entry: any) => ({
+          ...entry,
+          date: new Date(entry.date),
+          createdAt: new Date(entry.createdAt),
+          updatedAt: entry.updatedAt ? new Date(entry.updatedAt) : undefined,
+        })));
+      }
+    } catch (error) {
+      console.error('Error loading entries:', error);
+    }
+  };
+
+  const saveEntries = async (newEntries: DiaryEntry[]) => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newEntries));
+    } catch (error) {
+      console.error('Error saving entries:', error);
+    }
+  };
+
+  const addEntry = async () => {
     if (newHighlight.trim()) {
       const newEntry: DiaryEntry = {
         id: Date.now().toString(),
         date: new Date(),
         highlight: newHighlight.trim(),
+        content: newContent.trim(),
         createdAt: new Date(),
       };
-      setEntries([newEntry, ...entries]);
+      const updatedEntries = [newEntry, ...entries];
+      setEntries(updatedEntries);
+      await saveEntries(updatedEntries);
       setNewHighlight('');
+      setNewContent('');
     }
   };
 
@@ -42,14 +79,24 @@ export default function SoulBookScreen() {
       
       <ThemedView style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={styles.highlightInput}
           value={newHighlight}
           onChangeText={setNewHighlight}
           placeholder="What's your highlight for today?"
           placeholderTextColor="#666"
+        />
+        <TextInput
+          style={styles.contentInput}
+          value={newContent}
+          onChangeText={setNewContent}
+          placeholder="Write more about your day..."
+          placeholderTextColor="#666"
           multiline
         />
-        <TouchableOpacity style={styles.addButton} onPress={addEntry}>
+        <TouchableOpacity 
+          style={[styles.addButton, !newHighlight.trim() && styles.addButtonDisabled]} 
+          onPress={addEntry}
+          disabled={!newHighlight.trim()}>
           <ThemedText style={styles.buttonText}>Add Entry</ThemedText>
         </TouchableOpacity>
       </ThemedView>
@@ -60,7 +107,10 @@ export default function SoulBookScreen() {
             <ThemedText style={styles.date}>
               {entry.date.toLocaleDateString()}
             </ThemedText>
-            <ThemedText style={styles.entryText}>{entry.highlight}</ThemedText>
+            <ThemedText style={styles.highlight}>{entry.highlight}</ThemedText>
+            {entry.content && (
+              <ThemedText style={styles.content}>{entry.content}</ThemedText>
+            )}
           </ThemedView>
         ))}
       </ThemedView>
@@ -84,7 +134,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 24,
   },
-  input: {
+  highlightInput: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
+    borderRadius: 12,
+    padding: 16,
+    fontSize: 16,
+    marginBottom: 12,
+    color: '#2C3E50',
+    backgroundColor: '#fff',
+    height: 50,
+  },
+  contentInput: {
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.1)',
     borderRadius: 12,
@@ -106,6 +167,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
+  },
+  addButtonDisabled: {
+    backgroundColor: '#B8B8B8',
+    shadowColor: '#B8B8B8',
   },
   buttonText: {
     color: '#fff',
@@ -135,7 +200,14 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontWeight: '500',
   },
-  entryText: {
+  highlight: {
+    fontSize: 18,
+    fontWeight: '600',
+    lineHeight: 24,
+    color: '#2C3E50',
+    marginBottom: 8,
+  },
+  content: {
     fontSize: 16,
     lineHeight: 24,
     color: '#2C3E50',
