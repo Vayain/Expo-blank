@@ -45,6 +45,8 @@ export default function SoulBookScreen() {
     }
   };
 
+  const [selectedMood, setSelectedMood] = useState<string>('');
+
   const addEntry = async () => {
     if (newHighlight.trim()) {
       const newEntry: DiaryEntry = {
@@ -52,6 +54,7 @@ export default function SoulBookScreen() {
         date: new Date(),
         highlight: newHighlight.trim(),
         content: newContent.trim(),
+        mood: selectedMood,
         createdAt: new Date(),
       };
       const updatedEntries = [newEntry, ...entries];
@@ -93,6 +96,19 @@ export default function SoulBookScreen() {
           placeholderTextColor="#666"
           multiline
         />
+        <ThemedView style={styles.moodContainer}>
+          <ThemedText style={styles.moodLabel}>How are you feeling?</ThemedText>
+          <ThemedView style={styles.moodButtons}>
+            {['😊', '😌', '😐', '😔', '😤'].map((mood) => (
+              <TouchableOpacity
+                key={mood}
+                style={[styles.moodButton, mood === selectedMood && styles.selectedMood]}
+                onPress={() => setSelectedMood(mood)}>
+                <ThemedText style={styles.moodEmoji}>{mood}</ThemedText>
+              </TouchableOpacity>
+            ))}
+          </ThemedView>
+        </ThemedView>
         <TouchableOpacity 
           style={[styles.addButton, !newHighlight.trim() && styles.addButtonDisabled]} 
           onPress={addEntry}
@@ -104,9 +120,14 @@ export default function SoulBookScreen() {
       <ThemedView style={styles.entriesContainer}>
         {entries.map((entry) => (
           <ThemedView key={entry.id} style={styles.entryCard}>
-            <ThemedText style={styles.date}>
-              {entry.date.toLocaleDateString()}
-            </ThemedText>
+            <ThemedView style={styles.entryHeader}>
+              <ThemedText style={styles.date}>
+                {entry.date.toLocaleDateString()} {entry.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </ThemedText>
+              {entry.mood && (
+                <ThemedText style={styles.mood}>{entry.mood}</ThemedText>
+              )}
+            </ThemedView>
             <ThemedText style={styles.highlight}>{entry.highlight}</ThemedText>
             {entry.content && (
               <ThemedText style={styles.content}>{entry.content}</ThemedText>
@@ -211,5 +232,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#2C3E50',
+  },
+  moodContainer: {
+    marginBottom: 16,
+  },
+  moodLabel: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 8,
+  },
+  moodButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  moodButton: {
+    padding: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
+  },
+  selectedMood: {
+    backgroundColor: '#8B5CF6',
+    borderColor: '#8B5CF6',
+  },
+  moodEmoji: {
+    fontSize: 24,
   },
 });
